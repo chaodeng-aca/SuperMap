@@ -12,6 +12,7 @@ SuperMap is written in R and can be installed by running the following command i
 
 ```r
 devtools::install_github('chaodeng-aca/SuperMap')
+```
 
 ## Usage
 
