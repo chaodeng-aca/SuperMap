@@ -8,7 +8,7 @@
 
 ## Installation
 
-SuperMap is written in R and can be installed by running the following command in R:
+SuperMap is implemented as an R package which can be installed by running the following command in R:
 
 ```r
 devtools::install_github('chaodeng-aca/SuperMap')
