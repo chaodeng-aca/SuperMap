@@ -1,0 +1,13 @@
+Package: SuperMap
+Title: Bridging Unpaired Single-Cell Multimodal Data for Integrative Analyses
+Version: 1.0.0
+Authors@R: 
+    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: SuperMap is an R package for the integrative analyses of unpaired single-cell multimodal data.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports: MASS, rockchalk, minpack.lm, reshape2, pracma, foreach, doParallel, bigmemory
