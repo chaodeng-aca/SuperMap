@@ -365,14 +365,14 @@ body { line-height: 1.6; }
 <p>In this tutorial, we demonstrate the usage of SuperMap in integrative
 analyses of unpaired single-cell multimodal data. Here we showcase an
 example of RNA and ATAC modality. For testing reason, we uses a 10X
-Multimodal PBMC data download from <a href="https://www.10xgenomics.com/datasets">10X Genomics website</a>. Of
-note, we intentionally disregard the inherent pairing between
-modalities, treating them as unpaired to simulate real-world scenarios,
-with the cell pairing information used solely for performance
-evaluation.</p>
+Multimodal PBMC data download from <a href="https://www.10xgenomics.com/datasets">10X Genomics website</a>,
+which contains paired scRNA-seq and scATAC-seq profiles. Of note, we
+intentionally disregard the inherent pairing between modalities,
+treating them as unpaired to simulate real-world scenarios, with the
+cell pairing information used solely for performance evaluation.</p>
 <div id="necessary-packages" class="section level2">
 <h2>Necessary packages</h2>
-<p>In order to run the vignette, make sure the following packages are
+<p>In order to run this vignette, make sure the following packages are
 installed:</p>
 <pre class="r"><code>library(BiocParallel)
 library(dplyr)
@@ -387,9 +387,10 @@ library(Matrix)</code></pre>
 </div>
 <div id="stage-1-data-processing" class="section level2">
 <h2>Stage 1: Data processing</h2>
-<p>We begin by loading the original data file and creating SeuratObject
-for processing. The data contains paired scRNA-seq and scATAC-seq
-measurements, which will be intentionally treated as unpaired.</p>
+<p>We begin by loading the downloaded data file and creating a
+SeuratObject for processing. The data contains paired scRNA-seq and
+scATAC-seq measurements, which will be intentionally treated as unpaired
+for this analysis.</p>
 <pre class="r"><code>inputdata.10x &lt;- Read10X_h5(&quot;pbmc_granulocyte_sorted_10k_filtered_feature_bc_matrix.h5&quot;) ## Read data from the file
 rna_counts &lt;- inputdata.10x$`Gene Expression`
 atac_counts &lt;- inputdata.10x$Peaks
@@ -408,7 +409,7 @@ content.</p>
 <pre class="r"><code>pbmc &lt;- subset(x = pbmc,subset = nCount_RNA &lt; 25000 &amp;nCount_RNA &gt; 1000 &amp;percent.mt &lt; 20 &amp;nCount_ATAC &lt; 7e4 &amp;nCount_ATAC &gt; 5e3)</code></pre>
 <p>Next, we perform data normalization and dimensional reduction for
 visualization, following the Seurat pipeline. If you are unfamiliar with
-this workflow, please refer to their <a href="https://satijalab.org/seurat/articles/weighted_nearest_neighbor_analysis">tutorial</a></p>
+this workflow, please refer to their <a href="https://satijalab.org/seurat/articles/weighted_nearest_neighbor_analysis">tutorial</a>.</p>
 <pre class="r"><code>DefaultAssay(pbmc) &lt;- &quot;RNA&quot;
 pbmc = NormalizeData(object = pbmc)
 pbmc = FindVariableFeatures(pbmc,nfeatures = 3000)
@@ -434,11 +435,11 @@ of cross-modal mappings. To mitigate this, SuperMap follows the approach
 established in previous studies by aggregating closely similar cells
 into “meta-cells” to enhance the signal to-noise ratio.</p>
 <pre class="r"><code>pbmc &lt;- res_cluster(object = pbmc,resolution = 28,graph.name = &#39;wsnn&#39;)  ## The clustering resolution can be flexibly adjusted.
-metacell.pbmc.rna &lt;- getmetacell_RNA_count(object = pbmc,cluster.name = &quot;seurat_clusters&quot;)
+metacell.pbmc.rna &lt;- getmetacell_RNA(object = pbmc,cluster.name = &quot;seurat_clusters&quot;)
 metacell.pbmc.atac &lt;- getmetacell_ATAC(object = pbmc,cluster.name = &quot;seurat_clusters&quot;)</code></pre>
 </div>
-<div id="stage-2-preparating-input-for-supermap" class="section level2">
-<h2>Stage 2: Preparating input for SuperMap</h2>
+<div id="stage-2-preparing-input-for-supermap" class="section level2">
+<h2>Stage 2: Preparing input for SuperMap</h2>
 <p>We extract highly variable genes for subsequent calculations. If you
 have other genes of interest, you can also include them.</p>
 <pre class="r"><code>variable_gene = VariableFeatures(pbmc,assay = &#39;RNA&#39;)
@@ -448,9 +449,8 @@ atac = t(metacell.pbmc.atac)</code></pre>
 <p>SuperMap incorporates prior knowledge about the regulatory potential
 of the two modalities to regularize or constrain the model. Therefore,
 we need to compute a prior-related weight matrix <span class="math inline">\(D\)</span>. For integrating scRNA-seq and
-scATAC-seq data, <span class="math inline">\(D_ij\)</span> is calculated
-using an exponential function <span class="math inline">\(D_{ij} =
-exp(d_{ij}/d0)\)</span>, where <span class="math inline">\(d_{ij}\)</span> is the distance between the peak
+scATAC-seq data, <span class="math inline">\(D_{ij}\)</span> is
+calculated using an exponential function <span class="math inline">\(D_{ij} = exp(d_{ij}/d0)\)</span>, where <span class="math inline">\(d_{ij}\)</span> is the distance between the peak
 <span class="math inline">\(j\)</span> and the transcription start site
 of gene <span class="math inline">\(i\)</span>, and <span class="math inline">\(d0\)</span> is a hyperparameter with a default
 value of 100 kb. This indicates that peak-gene regulatory interactions
@@ -540,9 +540,21 @@ variations in the hyperparameters. Here, we run SuperMap using the
 default values.</p>
 <pre class="r"><code>result = supermap(Y_unpaired = rna_cal, X_unpaired = atac_cal, index_B_nonzero = b_01_index, B_dist = distance,
                   w = 2, rho = 1, lambda_prior = 1*10^(-4))</code></pre>
+<p>As shown in the above code, SuperMap requires four matrices as
+input:</p>
+<ul>
+<li>Y_unpaired: The data matrix for modality 1, such as the gene
+expression matrix.</li>
+<li>X_unpaired: The data matrix for modality 2, such as the chromatin
+accessibility matrix.</li>
+<li>index_B_nonzero: The index matrix of non-zero positions in the
+coefficient matrix B, generated in Stage 2.</li>
+<li>B_dist: The prior-related weight matrix D, generated in Stage
+2.</li>
+</ul>
 <p>The returned results include the convergence of the model and the
-estimated parameters. We first plot the convergence curve for this
-run.</p>
+estimated parameters. We first plot the convergence curve for this run
+to check the iteration process.</p>
 <pre class="r"><code>loss = result$convergence
 loss = as.data.frame(loss)
 
@@ -564,6 +576,8 @@ inputs for diagonal integration thereby improving modality alignment;
 cross-modal regulation strengths; and (4) revealing epigenomic priming
 events to specify cell differentiation directions along the
 trajectory.</p>
+<p>In the next stage, we will demonstrate how to apply SuperMap for
+downstream analyses.</p>
 </div>
 
 
