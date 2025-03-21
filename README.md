@@ -16,4 +16,4 @@ devtools::install_github('chaodeng-aca/SuperMap')
 
 ## Usage
 
-For usage examples and a guided walkthrough, please refer to `Vignettes` directory provided in the repository.
+For usage examples and a guided walkthrough, please refer to `vignettes` directory provided in the repository.
