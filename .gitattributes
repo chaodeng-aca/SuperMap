@@ -1,2 +1,3 @@
 *.R linguist-detectable=true
 *.html linguist-vendored
+*.ipynb linguist-vendored
