@@ -1,1 +1,2 @@
 *.R linguist-detectable=true
+*.html linguist-vendored
