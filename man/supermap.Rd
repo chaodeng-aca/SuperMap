@@ -4,40 +4,26 @@
 \alias{supermap}
 \title{supermap}
 \usage{
-supermap(
-  Y_unpaired,
-  X_unpaired,
-  index_B_nonzero,
-  B_dist,
-  w,
-  rho,
-  lambda_prior,
-  n_iter = 20,
-  d0 = 1e+05
-)
+supermap(input_data, w, rho, lambda_prior, n_iter = 10, d0 = 1e+05, ncore = 60)
 }
 \arguments{
-\item{Y_unpaired}{The data matrix Y}
+\item{input_data}{a}
 
-\item{X_unpaired}{The data matrix X}
+\item{w}{a}
 
-\item{index_B_nonzero}{The index matrix of non-zero positions in the coefficient matrix B}
+\item{rho}{a}
 
-\item{B_dist}{prior-related weight matrix D}
+\item{lambda_prior}{a}
 
-\item{w}{parameter for weighting marginal distributions and pairwise interactions}
+\item{n_iter}{a}
 
-\item{rho}{dual variable parameter}
+\item{d0}{a}
 
-\item{lambda_prior}{prior penalty parameter}
-
-\item{n_iter}{The number of iterations}
-
-\item{d0}{The hyperparameter d0, with a default value of 100,000}
+\item{ncore}{a}
 }
 \value{
-The estimated model parameters, as well as the loss value for each iteration
+a
 }
 \description{
-This function utilizes the ADMM algorithm to estimate parameters in SuperMap model.
+supermap
 }

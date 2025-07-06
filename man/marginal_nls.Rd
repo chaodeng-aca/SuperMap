@@ -18,27 +18,29 @@ marginal_nls(
 )
 }
 \arguments{
-\item{Y}{The data matrix Y}
+\item{Y}{a}
 
-\item{X}{The data matrix X}
+\item{X}{a}
 
-\item{pairwise_par}{The parameters obtained from solving the pairwise interactions part in ADMM}
+\item{pairwise_par}{a}
 
-\item{marginal_init_des}{The initial values of the parameters to be solved}
+\item{marginal_init_des}{a}
 
-\item{u}{The dual variables updated in the last iteration}
+\item{u}{a}
 
-\item{index_B_01_des}{The index matrix of non-zero positions in the coefficient matrix B}
+\item{index_B_01_des}{a}
 
-\item{nls_diag}{The custom non-negative least squares solver function that needs to be called}
+\item{nls_diag}{a}
 
-\item{loss_f}{The custom loss function}
+\item{loss_f}{a}
 
-\item{rho}{dual variable parameter}
+\item{rho}{a}
+
+\item{n}{a}
 }
 \value{
-The solved parameters and the loss function values
+a
 }
 \description{
-This function is used to solve the optimization problem corresponding to the marginal distribution part in ADMM
+marginal_nls
 }

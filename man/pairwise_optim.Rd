@@ -21,35 +21,35 @@ pairwise_optim(
 )
 }
 \arguments{
-\item{Y}{The data matrix Y}
+\item{Y}{a}
 
-\item{X}{The data matrix X}
+\item{X}{a}
 
-\item{B_initial}{The initial value of the coefficient matrix B}
+\item{B_initial}{a}
 
-\item{sigma_init}{The initial value of the variance sigma}
+\item{sigma_init}{a}
 
-\item{index_B_01}{The index matrix of non-zero positions in the coefficient matrix B}
+\item{index_B_01}{a}
 
-\item{dist_matrix}{prior-related weight matrix D}
+\item{dist_matrix}{a}
 
-\item{lambda_B}{prior penalty parameter}
+\item{lambda_B}{a}
 
-\item{rho}{dual variable parameter}
+\item{rho}{a}
 
-\item{w}{parameter for weighting marginal distributions and pairwise interactions}
+\item{w}{a}
 
-\item{marginal_par}{The parameters obtained from solving the marginal distribution part in ADMM}
+\item{marginal_par}{a}
 
-\item{u}{The dual variables updated in the last iteration}
+\item{u}{a}
 
-\item{iteration}{The number of iterations}
+\item{iteration}{a}
 
-\item{d0}{The hyperparameter d0}
+\item{d0}{a}
 }
 \value{
-Return the solved parameters B, sigma, and the loss value for each iteration.
+a
 }
 \description{
-This function is used to solve the optimization problem corresponding to the pairwise interactions part in ADMM
+This function is used to solve the optimization problem of the pairwise interactions term in objective function
 }

@@ -6,6 +6,22 @@
 \usage{
 nls_diag(Y, X, pairwise_par, marginal_init, u, rho)
 }
+\arguments{
+\item{Y}{a}
+
+\item{X}{a}
+
+\item{pairwise_par}{a}
+
+\item{marginal_init}{a}
+
+\item{u}{a}
+
+\item{rho}{a}
+}
+\value{
+a
+}
 \description{
-This function utilizes the Levenberg-Marquardt (LM) method to solve the nonlinear least squares problem
+nls_diag
 }
