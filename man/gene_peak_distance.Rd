@@ -2,20 +2,20 @@
 % Please edit documentation in R/supermap.R
 \name{gene_peak_distance}
 \alias{gene_peak_distance}
-\title{gene_peak_distance}
+\title{Calculate Distance Between Genes and Peaks}
 \usage{
 gene_peak_distance(rna, atac, gene_annotation)
 }
 \arguments{
-\item{rna}{The RNA modality data matrix, where column is feature and row is cell.}
+\item{rna}{A matrix representing the RNA modality data, where columns are features (genes) and rows are cells.}
 
-\item{atac}{The ATAC modality data matrix, where column is feature and row is cell.}
+\item{atac}{A matrix representing the ATAC modality data, where columns are features (peaks) and rows are cells.}
 
-\item{gene_annotation}{A data frame that contains gene location informance}
+\item{gene_annotation}{A data frame containing gene location information (e.g., chromosome, start, end, strand).}
 }
 \value{
-A list that contains modality data and peak-gene distance
+A list containing the modality data and the computed gene-peak distances. This can be used as input for downstream model fitting.
 }
 \description{
-gene_peak_distance
+Compute the genomic distances between all genes in the RNA modality and all peaks in the ATAC modality.
 }

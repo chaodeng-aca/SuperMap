@@ -2,26 +2,10 @@
 % Please edit documentation in R/supermap.R
 \name{nls_diag}
 \alias{nls_diag}
-\title{nls_diag}
+\title{Nonlinear Least Squares}
 \usage{
 nls_diag(Y, X, pairwise_par, marginal_init, u, rho)
 }
-\arguments{
-\item{Y}{a}
-
-\item{X}{a}
-
-\item{pairwise_par}{a}
-
-\item{marginal_init}{a}
-
-\item{u}{a}
-
-\item{rho}{a}
-}
-\value{
-a
-}
 \description{
-nls_diag
+Nonlinear Least Squares
 }

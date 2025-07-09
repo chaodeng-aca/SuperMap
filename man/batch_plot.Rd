@@ -2,18 +2,10 @@
 % Please edit documentation in R/supermap.R
 \name{batch_plot}
 \alias{batch_plot}
-\title{batch_plot}
+\title{UMAP Visualization of Cells Grouped by Batch}
 \usage{
 batch_plot(umap, rna_cell_size)
 }
-\arguments{
-\item{umap}{a}
-
-\item{rna_cell_size}{a}
-}
-\value{
-a
-}
 \description{
-batch_plot
+UMAP Visualization of Cells Grouped by Batch
 }

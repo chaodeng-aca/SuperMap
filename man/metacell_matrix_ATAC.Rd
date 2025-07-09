@@ -2,18 +2,18 @@
 % Please edit documentation in R/supermap.R
 \name{metacell_matrix_ATAC}
 \alias{metacell_matrix_ATAC}
-\title{metacell_matrix_ATAC}
+\title{Compute Metacell-Level Data Matrix}
 \usage{
 metacell_matrix_ATAC(object, cluster.name)
 }
 \arguments{
-\item{object}{a}
+\item{object}{A Seurat object}
 
-\item{cluster.name}{a}
+\item{cluster.name}{The name of the cluster}
 }
 \value{
-a
+A matrix representing data at the metacell level.
 }
 \description{
-metacell_matrix_ATAC
+Compute Metacell-Level Data Matrix
 }

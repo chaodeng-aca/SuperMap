@@ -6,16 +6,6 @@
 \usage{
 loss_f(Y, X, parameter)
 }
-\arguments{
-\item{Y}{a}
-
-\item{X}{a}
-
-\item{parameter}{a}
-}
-\value{
-a
-}
 \description{
 loss_f
 }

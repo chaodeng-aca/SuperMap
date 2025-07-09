@@ -2,22 +2,22 @@
 % Please edit documentation in R/supermap.R
 \name{metacell_construct}
 \alias{metacell_construct}
-\title{metacell_construct}
+\title{Construct Metacells}
 \usage{
 metacell_construct(object, resolution, graph.name, algorithm = 1)
 }
 \arguments{
-\item{object}{a}
+\item{object}{A Seurat object}
 
-\item{resolution}{a}
+\item{resolution}{Clustering resolution parameter controlling the granularity of metacell}
 
-\item{graph.name}{a}
+\item{graph.name}{Name of the graph to use for clustering}
 
-\item{algorithm}{a}
+\item{algorithm}{Clustering algorithm to use}
 }
 \value{
-a
+A Seurat object
 }
 \description{
-metacell_construct
+Construct Metacells
 }

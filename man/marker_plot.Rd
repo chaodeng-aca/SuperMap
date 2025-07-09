@@ -2,16 +2,10 @@
 % Please edit documentation in R/supermap.R
 \name{marker_plot}
 \alias{marker_plot}
-\title{marker_plot}
+\title{Visualization of Marker Genes}
 \usage{
 marker_plot(cell_umap)
 }
-\arguments{
-\item{cell_umap}{a}
-}
-\value{
-a
-}
 \description{
-marker_plot
+Visualize the expression patterns of marker genes across cells.
 }

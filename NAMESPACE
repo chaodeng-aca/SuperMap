@@ -2,7 +2,6 @@
 
 export(batch_plot)
 export(cell_type_plot)
-export(deconvol)
 export(diagonal_integration)
 export(gene_peak_distance)
 export(imputation)

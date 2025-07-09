@@ -2,7 +2,7 @@
 % Please edit documentation in R/supermap.R
 \name{marginal_nls}
 \alias{marginal_nls}
-\title{marginal_nls}
+\title{Marginal distribution term}
 \usage{
 marginal_nls(
   Y,
@@ -17,30 +17,6 @@ marginal_nls(
   n
 )
 }
-\arguments{
-\item{Y}{a}
-
-\item{X}{a}
-
-\item{pairwise_par}{a}
-
-\item{marginal_init_des}{a}
-
-\item{u}{a}
-
-\item{index_B_01_des}{a}
-
-\item{nls_diag}{a}
-
-\item{loss_f}{a}
-
-\item{rho}{a}
-
-\item{n}{a}
-}
-\value{
-a
-}
 \description{
-marginal_nls
+Marginal distribution term
 }

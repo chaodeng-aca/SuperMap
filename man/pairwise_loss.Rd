@@ -2,7 +2,7 @@
 % Please edit documentation in R/supermap.R
 \name{pairwise_loss}
 \alias{pairwise_loss}
-\title{pairwise_loss}
+\title{Computing pairwise loss}
 \usage{
 pairwise_loss(
   R,
@@ -17,30 +17,6 @@ pairwise_loss(
   w
 )
 }
-\arguments{
-\item{R}{a}
-
-\item{r}{a}
-
-\item{B}{a}
-
-\item{sigma}{a}
-
-\item{dist_matrix}{a}
-
-\item{marginal_par}{a}
-
-\item{u}{a}
-
-\item{lambda_prior}{a}
-
-\item{rho}{a}
-
-\item{w}{a}
-}
-\value{
-a
-}
 \description{
-pairwise_loss
+Computing pairwise loss
 }

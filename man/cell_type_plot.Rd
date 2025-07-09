@@ -2,22 +2,10 @@
 % Please edit documentation in R/supermap.R
 \name{cell_type_plot}
 \alias{cell_type_plot}
-\title{cell_type_plot}
+\title{UMAP Visualization of Cells Grouped by Modality}
 \usage{
 cell_type_plot(umap, rna_cell_size, rna_label, atac_label)
 }
-\arguments{
-\item{umap}{a}
-
-\item{rna_cell_size}{a}
-
-\item{rna_label}{a}
-
-\item{atac_label}{a}
-}
-\value{
-a
-}
 \description{
-cell_type_plot
+UMAP Visualization of Cells Grouped by Modality
 }

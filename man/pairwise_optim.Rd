@@ -2,7 +2,7 @@
 % Please edit documentation in R/supermap.R
 \name{pairwise_optim}
 \alias{pairwise_optim}
-\title{pairwise_optim}
+\title{Pairwise interactions term}
 \usage{
 pairwise_optim(
   Y,
@@ -20,36 +20,6 @@ pairwise_optim(
   d0
 )
 }
-\arguments{
-\item{Y}{a}
-
-\item{X}{a}
-
-\item{B_initial}{a}
-
-\item{sigma_init}{a}
-
-\item{index_B_01}{a}
-
-\item{dist_matrix}{a}
-
-\item{lambda_B}{a}
-
-\item{rho}{a}
-
-\item{w}{a}
-
-\item{marginal_par}{a}
-
-\item{u}{a}
-
-\item{iteration}{a}
-
-\item{d0}{a}
-}
-\value{
-a
-}
 \description{
-This function is used to solve the optimization problem of the pairwise interactions term in objective function
+Pairwise interactions term
 }

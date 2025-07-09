@@ -2,7 +2,7 @@
 % Please edit documentation in R/supermap.R
 \name{diagonal_integration}
 \alias{diagonal_integration}
-\title{diagonal_integration}
+\title{Performing diagonal integration}
 \usage{
 diagonal_integration(
   supermap_data,
@@ -12,20 +12,6 @@ diagonal_integration(
   rna_label
 )
 }
-\arguments{
-\item{supermap_data}{a}
-
-\item{learned_mappings}{a}
-
-\item{rna}{a}
-
-\item{atac}{a}
-
-\item{rna_label}{a}
-}
-\value{
-a
-}
 \description{
-diagonal_integration
+Performing diagonal integration
 }

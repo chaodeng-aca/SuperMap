@@ -2,20 +2,20 @@
 % Please edit documentation in R/supermap.R
 \name{imputation}
 \alias{imputation}
-\title{imputation}
+\title{Missing Modality Imputation}
 \usage{
 imputation(supermap_data, learned_mappings, atac)
 }
 \arguments{
-\item{supermap_data}{a}
+\item{supermap_data}{The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.}
 
-\item{learned_mappings}{a}
+\item{learned_mappings}{Cross-modality mappings learned by the 'supermap' function.}
 
-\item{atac}{a}
+\item{atac}{ATAC modality data.}
 }
 \value{
-a
+A matrix containing the imputed values for the missing modality.
 }
 \description{
-imputation
+Missing Modality Imputation
 }
