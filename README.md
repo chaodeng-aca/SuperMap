@@ -14,6 +14,6 @@ SuperMap is implemented as an R package which can be installed by running the fo
 devtools::install_github('chaodeng-aca/SuperMap')
 ```
 
-## Usage
+## Tutorials
 
-For usage examples and a guided walkthrough, please refer to `vignettes` directory provided in the repository. The used data in the tutorial can be found in the `data` directory.
+For a step-by-step tutorial, please refer to the `vignette` directory in the repository, which provides a [usage example](https://github.com/chaodeng-aca/SuperMap/blob/main/vignette/tutorial.html). 
