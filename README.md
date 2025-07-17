@@ -18,6 +18,6 @@ devtools::install_github('chaodeng-aca/SuperMap')
 
 For a step-by-step tutorial, please refer to the `vignette` directory in the repository, which provides usage examples.
 
-* Example 1: [Running on the 10x Multiome Dataset] (https://chaodeng-aca.github.io/SuperMap/Running_on_the_10x_Multiome_Dataset.html)
-* Example 2: [Running on the ASAP-seq Dataset] (https://chaodeng-aca.github.io/SuperMap/Running_on_the_ASAP-seq_Dataset.html)
+* Example 1: [Running on the 10x Multiome Dataset](https://chaodeng-aca.github.io/SuperMap/Running_on_the_10x_Multiome_Dataset.html)
+* Example 2: [Running on the ASAP-seq Dataset](https://chaodeng-aca.github.io/SuperMap/Running_on_the_ASAP-seq_Dataset.html)
  
