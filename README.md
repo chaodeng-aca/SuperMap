@@ -16,4 +16,8 @@ devtools::install_github('chaodeng-aca/SuperMap')
 
 ## Tutorials
 
-For a step-by-step tutorial, please refer to the `vignette` directory in the repository, which provides a [usage example](https://github.com/chaodeng-aca/SuperMap/blob/main/vignette/tutorial.html). 
+For a step-by-step tutorial, please refer to the `vignette` directory in the repository, which provides usage examples.
+
+* Example 1: Running on the 10x Multiome Dataset
+* Example 1: Running on the ASAP-seq Dataset
+ 
