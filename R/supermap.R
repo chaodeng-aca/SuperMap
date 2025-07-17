@@ -18,7 +18,9 @@ gene_peak_distance = function(rna,atac,gene_annotation){
   match_gene_index = match_gene[!is.na(match_gene)]
   index = which(duplicated(match_gene_index)==TRUE)
   match_gene_index = match_gene_index[-index]
-  gene_loc = gene_loc[-index,]  #remove duplication
+  if (length(index) !=0 ) {
+     gene_loc = gene_loc[-index,]  #remove duplication
+  }
 
   rna_annot = rna[,gene_loc$gene_name]
 
@@ -339,14 +341,14 @@ cell_type_plot = function(umap,rna_cell_size, rna_label, atac_label){
 
   p = ggplot()+
     geom_point(data=rna_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=0.05)+
-    geom_point(data=atac_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=1)+
+    geom_point(data=atac_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=0.5)+
     theme_bw()+
     scale_color_manual(values = manual_colors) +
     labs(x = "UMAP1", y = "UMAP2")+
     theme(panel.grid = element_blank(),#panel.border = element_blank()
           panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
           axis.line = element_line(colour = "black"),legend.position = 'right',
-          legend.text = element_text(size = 13),
+          legend.text = element_text(size = 10),
           axis.title = element_blank(),  # 隐藏坐标轴名称
           axis.text = element_blank(),
           axis.ticks = element_blank(),
@@ -428,8 +430,8 @@ batch_plot = function(umap,rna_cell_size){
     theme_bw()+
     theme(panel.grid = element_blank(),#panel.border = element_blank()
           panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
-          axis.line = element_line(colour = "black"),legend.position = 'none',
-          legend.text = element_text(size = 13),
+          axis.line = element_line(colour = "black"),legend.position = 'right',
+          legend.text = element_text(size = 10),
           axis.title = element_blank(),
           axis.text = element_blank(),
           axis.ticks = element_blank(),
@@ -565,5 +567,26 @@ metacell_matrix_ATAC <- function(object, cluster.name) {
   return(metacell)
 }
 
-
+#' Compute Metacell-Level Data Matrix
+#'
+#' @param object A Seurat object
+#' @param cluster.name The name of the cluster
+#'
+#' @return A matrix representing data at the metacell level.
+#' @export
+metacell_matrix_ADT <- function(object, cluster.name) {
+  clusters <- object@meta.data[[cluster.name]]
+  clust.levels <- levels(clusters)
+  assay.matrix = object@assays$ADT$counts
+  nrow <- length(clust.levels)
+  ncol <- nrow(assay.matrix)
+  metacell <- matrix(nrow = nrow, ncol = ncol)
+  rownames(metacell) <- paste0("metacell_", clust.levels)
+  colnames(metacell) <- rownames(assay.matrix)
+  for (i in 1:nrow(metacell)) {
+    metacell_expression <- apply(assay.matrix[ ,clusters ==as.character(i - 1)], 1, mean)
+    metacell[i,] = metacell_expression
+  }
+  return(metacell)
+}
 
