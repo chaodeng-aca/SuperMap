@@ -1,3 +1,11 @@
+
+# Note: Unlike other competing methods that can be executed by calling functions from an installed software package, scJoint is not distributed as an installable package. 
+# Instead, it is run directly from the source code. 
+# To execute scJoint, one needs to first clone its repository (git clone https://github.com/SydneyBioX/scJoint.git), modify the "config.py" file to specify model parameters and data paths, and then run the command "python main.py". 
+# Therefore, we provide the "config.py" file to illustrate the settings used in our comparison. Running "python main.py" with this configuration reproduces the results.
+
+
+
 import torch
 import os
 
