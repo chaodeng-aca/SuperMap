@@ -1,3 +1,31 @@
+#' SuperMap: Bridging Unpaired Single-Cell Multimodal Data for Integrative Analyses
+#'
+#' @docType package
+#' @name SuperMap
+#'
+#' @import BiocParallel
+#' @import dplyr
+#' @import ggplot2
+#' @import Seurat
+#' @import Signac
+#' @import GenomicRanges
+#' @import GenomeInfoDb
+#' @import EnsDb.Hsapiens.v86
+#' @import Matrix
+#' @import stringr
+#' @import tidyr
+#' @import RColorBrewer
+#' @import openblasctl
+#' @import MASS
+#' @import rockchalk
+#' @import minpack.lm
+#' @import reshape2
+#' @import pracma
+#' @import foreach
+#' @import doParallel
+#' @import bigmemory
+NULL
+
 
 #' Calculate Distance Between Genes and Peaks
 #' @description Compute the genomic distances between all genes in the RNA modality and all peaks in the ATAC modality.
@@ -66,6 +94,107 @@ gene_peak_distance = function(rna,atac,gene_annotation){
   rownames(b_dis) = colnames(atac_annot)
 
   return(list(rna_data = rna_annot,atac_data = atac_annot,distance = list(b_01 = b_nozero_index,b_dis = b_dis)))
+}
+
+
+#' UMAP Visualization of Cells Grouped by Batch
+#' @export
+batch_plot = function(umap, rna_cell_size, title){
+  colnames(umap) = c('UMAP_1','UMAP_2')
+  p = ggplot()+
+    geom_point(data=as.data.frame(umap[1:rna_cell_size,]),aes(x=UMAP_1,y = UMAP_2,color = 'RNA'),size=0.05)+
+    geom_point(data=as.data.frame(umap[(rna_cell_size+1):nrow(umap),]),aes(x=UMAP_1,y = UMAP_2,color = 'ATAC'),size=0.05)+
+    scale_color_manual(name = "", values = c("RNA" = "#1A77B6", "ATAC" = "#F57F21")) +
+    theme_bw()+
+    theme(panel.grid = element_blank(),#panel.border = element_blank()
+          panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+          axis.line = element_line(colour = "black"),legend.position = 'right',
+          legend.text = element_text(size = 15),
+          axis.title = element_blank(),  # 隐藏坐标轴名称
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          aspect.ratio = 1,
+          axis.line.x = element_line(color = NA),
+          axis.line.y = element_line(color = NA),
+          plot.title = element_text(hjust = 0.5))+
+    labs(color = "")+
+    coord_fixed()+
+    guides(color = guide_legend(override.aes = list(size = 3))) +
+    ggtitle(title)
+  return(p)
+}
+
+
+#' UMAP Visualization of Cells Grouped by Modality
+#'
+#' @export
+cell_type_plot = function(umap, cell_label, rna_cell_size, title){
+
+  rna_umap = as.data.frame(umap[1:rna_cell_size,])
+  atac_umap = as.data.frame(umap[(rna_cell_size+1):nrow(umap),])
+  rna_umap$cell_type = cell_label[rownames(rna_umap),]
+
+  cell_name = sub("_.*", "", rownames(atac_umap))
+  atac_umap$cell_type = cell_label[cell_name,]
+  atac_size = 0.05
+  all_cell_types <- unique(rna_umap$cell_type)
+  manual_colors <- setNames(colorRampPalette(brewer.pal(12, "Set3"))(length(all_cell_types)), all_cell_types)
+  p = ggplot()+
+    geom_point(data=rna_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=0.05)+
+    geom_point(data=atac_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=atac_size)+
+    theme_bw()+
+    scale_color_manual(values = manual_colors) +
+    labs(x = "UMAP1", y = "UMAP2")+
+    theme(panel.grid = element_blank(),#panel.border = element_blank()
+          panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+          axis.line = element_line(colour = "black"),legend.position = 'right',
+          legend.text = element_text(size = 15),
+          axis.title = element_blank(),  # 隐藏坐标轴名称
+          axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          aspect.ratio = 1,
+          axis.line.x = element_line(color = NA),
+          axis.line.y = element_line(color = NA),
+          plot.title = element_text(hjust = 0.5))+
+    labs(color = "")+
+    coord_fixed()+
+    guides(color = guide_legend(override.aes = list(size = 3))) +  ##控制图例的点大小
+    ggtitle(title)
+  return(p)
+}
+
+
+#' Visualization of Marker Genes
+#' @description Visualize the expression patterns of marker genes across cells.
+#' @export
+marker_plot = function(cell_umap){
+  cell_umap$imputed_value = scale_01(cell_umap$imputed_value)
+  p = ggplot()+
+    geom_point(data=cell_umap,aes_string(x = "umap_1", y = "umap_2", color = "imputed_value"),size=0.1)+
+    scale_color_gradient(low = "grey", high = '#CD2626') +
+    theme_bw()+
+    theme(
+      panel.grid = element_blank(),
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+      axis.line = element_blank(),
+      axis.ticks = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      legend.position = 'right',
+      legend.text = element_text(size = 13),
+      aspect.ratio = 1,
+      axis.title = element_text(size = 13)
+    )+
+    labs(color = "")+
+    coord_fixed()+
+    guides(color = guide_colorbar(barwidth = 1, barheight = 20))
+  return(p)
+}
+
+scale_01 <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
 }
 
 
@@ -327,175 +456,6 @@ supermap = function(input_data, w=2, rho=1, lambda_prior=1*10^(-4), n_iter=10,d0
 }
 
 
-#' UMAP Visualization of Cells Grouped by Modality
-#'
-#' @export
-cell_type_plot = function(umap,rna_cell_size, rna_label, atac_label){
-  rna_umap = as.data.frame(umap[1:rna_cell_size,])
-  atac_umap = as.data.frame(umap[(rna_cell_size+1):nrow(umap),])
-  rna_umap$cell_type = rna_label[rownames(rna_umap),]
-  atac_umap$cell_type = atac_label[rownames(atac_umap),]
-
-  all_cell_types <- unique(rna_umap$cell_type)
-  manual_colors <- setNames(colorRampPalette(brewer.pal(12, "Set3"))(length(all_cell_types)), all_cell_types)
-
-  p = ggplot()+
-    geom_point(data=rna_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=0.05)+
-    geom_point(data=atac_umap,aes(x=umap_1,y = umap_2,color = cell_type),size=0.5)+
-    theme_bw()+
-    scale_color_manual(values = manual_colors) +
-    labs(x = "UMAP1", y = "UMAP2")+
-    theme(panel.grid = element_blank(),#panel.border = element_blank()
-          panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
-          axis.line = element_line(colour = "black"),legend.position = 'right',
-          legend.text = element_text(size = 10),
-          axis.title = element_blank(),  # 隐藏坐标轴名称
-          axis.text = element_blank(),
-          axis.ticks = element_blank(),
-          aspect.ratio = 1,
-          axis.line.x = element_line(color = NA),
-          axis.line.y = element_line(color = NA),
-          plot.title = element_text(hjust = 0.5))+
-    labs(color = "")+
-    coord_fixed()
-  return(p)
-}
-
-
-
-
-#' Performing diagonal integration
-#' @export
-diagonal_integration = function(supermap_data, learned_mappings = learned_mappings,
-                                rna, atac, rna_label){
-  b_hat = rbind(learned_mappings$estimated_intercept,learned_mappings$estimate_b)
-  atac_data = supermap_data$atac_data
-  imputation = cbind(1,atac_data) %*% b_hat
-
-  new_atac = CreateSeuratObject(counts = t(imputation),assay = "ACTIVITY")
-  new_atac = NormalizeData(object = new_atac)
-  new_atac@assays$ACTIVITY$data = t(imputation)
-  new_atac = ScaleData(new_atac)
-  gene_use = colnames(imputation)
-
-  transfer.anchors <- FindTransferAnchors(reference = rna, query = new_atac, features = gene_use,scale = FALSE,
-                                          reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")
-  refdata = (rna@assays$RNA$data)[gene_use,]
-  imputation <- TransferData(anchorset = transfer.anchors, refdata = refdata,
-                             weight.reduction = 'pca',query = new_atac,k.weight = 5)
-  cell_label = rna_label
-  cell_label = cell_label[colnames(rna),]
-  predicted_label = TransferData(anchorset = transfer.anchors, refdata = cell_label,
-                                 weight.reduction = 'pca',query = new_atac,k.weight = 5)
-  predicted_label = predicted_label@meta.data['predicted.id']
-  rna_data = rna@assays$RNA$data[gene_use,]
-  atac_data = imputation@assays$id@data[rownames(rna_data),]
-
-  coembed_data <- cbind(rna_data,atac_data)
-  coembed = CreateSeuratObject(coembed_data)
-  coembed = NormalizeData(object = coembed)
-  coembed@assays$RNA$data = coembed_data
-  coembed <- ScaleData(coembed, features = gene_use, do.scale = FALSE)
-  coembed <- RunPCA(coembed, features = gene_use, verbose = FALSE)
-  coembed <- RunUMAP(coembed, dims = 1:50)
-  umap_cord = coembed@reductions$umap@cell.embeddings
-  umap_cord = rbind(umap_cord[1:ncol(rna),],deconvol(atac = atac, meta_data = umap_cord))
-  pca_cord = coembed@reductions$pca@cell.embeddings
-  pca_cord = rbind(pca_cord[1:ncol(rna),],deconvol(atac = atac, meta_data = pca_cord))
-  predicted_label = deconvol(atac = atac, meta_data = predicted_label)
-  return(list(umap = umap_cord,pca = pca_cord,predicted_label = predicted_label))
-}
-
-deconvol = function(atac, meta_data){
-  meta_single_correspondence = atac@meta.data['seurat_clusters']
-  single_data = matrix(nrow = nrow(meta_single_correspondence),ncol = ncol(meta_data))
-  rownames(single_data) = rownames(meta_single_correspondence);colnames(single_data)=colnames(meta_data)
-  for (cell in rownames(single_data)) {
-    meta_name = meta_single_correspondence[cell,]
-    meta_name = paste0("metacell_",meta_name)
-    single_data[cell,] = meta_data[meta_name,]
-  }
-  rownames(single_data) = paste0(rownames(single_data),'_atac')
-  return(single_data)
-}
-
-#' UMAP Visualization of Cells Grouped by Batch
-#' @export
-batch_plot = function(umap,rna_cell_size){
-  colnames(umap) = c('UMAP_1','UMAP_2')
-  p = ggplot()+
-    geom_point(data=as.data.frame(umap[1:rna_cell_size,]),aes(x=UMAP_1,y = UMAP_2,color = 'RNA'),size=0.05)+
-    geom_point(data=as.data.frame(umap[(rna_cell_size+1):nrow(umap),]),aes(x=UMAP_1,y = UMAP_2,color = 'ATAC'),size=0.5)+
-    scale_color_manual(name = "", values = c("RNA" = "#1A77B6", "ATAC" = "#F57F21")) +
-    theme_bw()+
-    theme(panel.grid = element_blank(),#panel.border = element_blank()
-          panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
-          axis.line = element_line(colour = "black"),legend.position = 'right',
-          legend.text = element_text(size = 10),
-          axis.title = element_blank(),
-          axis.text = element_blank(),
-          axis.ticks = element_blank(),
-          aspect.ratio = 1,
-          axis.line.x = element_line(color = NA),
-          axis.line.y = element_line(color = NA),
-          plot.title = element_text(hjust = 0.5))+
-    labs(color = "")+
-    coord_fixed()
-  return(p)
-}
-
-
-#' Visualization of Marker Genes
-#' @description Visualize the expression patterns of marker genes across cells.
-#' @export
-marker_plot = function(cell_umap){
-  p = ggplot()+
-    geom_point(data=cell_umap,aes_string(x = "umap_1", y = "umap_2", color = "imputed_value"),size=0.1)+
-    scale_color_gradient(low = "grey", high = '#CD2626') +
-    theme_bw()+
-    theme(
-      panel.grid = element_blank(),
-      panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
-      axis.line = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank(),
-      legend.position = 'right',
-      legend.text = element_text(size = 13),
-      aspect.ratio = 1,
-      axis.title = element_text(size = 13)
-    )+
-    labs(color = "")+
-    coord_fixed()+
-    guides(color = guide_colorbar(barwidth = 1, barheight = 20))
-  return(p)
-}
-
-#' Missing Modality Imputation
-#'
-#' @param supermap_data The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.
-#' @param learned_mappings Cross-modality mappings learned by the 'supermap' function.
-#' @param atac ATAC modality data.
-#'
-#' @return A matrix containing the imputed values for the missing modality.
-#' @export
-imputation = function(supermap_data,learned_mappings,atac){
-  b_hat = rbind(learned_mappings$estimated_intercept,learned_mappings$estimate_b)
-  atac_data = supermap_data$atac_data
-  imputation = cbind(1,atac_data) %*% b_hat
-  meta_single_correspondence = atac@meta.data['seurat_clusters']
-  imputation_single = matrix(nrow = nrow(meta_single_correspondence),ncol = ncol(imputation))
-  rownames(imputation_single) = rownames(meta_single_correspondence);colnames(imputation_single)=colnames(imputation)
-  for (cell in rownames(imputation_single)) {
-    meta_name = meta_single_correspondence[cell,]
-    meta_name = paste0("metacell_",meta_name)
-    imputation_single[cell,] = imputation[meta_name,]
-  }
-  return(imputation_single)
-}
-
 #' Construct Metacells
 #'
 #' @param object A Seurat object
@@ -503,7 +463,7 @@ imputation = function(supermap_data,learned_mappings,atac){
 #' @param graph.name Name of the graph to use for clustering
 #' @param algorithm Clustering algorithm to use
 #'
-#' @return A Seurat object
+#' @return A Seurat object with meta-cell partitioning information
 #' @export
 metacell_construct <- function(object, resolution, graph.name, algorithm =1){
   object <- FindClusters(object, graph.name = graph.name,resolution = resolution, algorithm = algorithm)
@@ -589,4 +549,156 @@ metacell_matrix_ADT <- function(object, cluster.name) {
   }
   return(metacell)
 }
+
+
+
+smooth_knn_atac <- function(atac_data, b_hat, k = 50) {
+
+  atac_data <- FindNeighbors(object = atac_data, dims = 2:50, reduction = 'lsi', k.param = k)
+  # obtaining neighbors
+  neighbors = atac_data@graphs$ATAC_snn
+
+  weight_matrix = matrix(0,nrow = nrow(neighbors),ncol = ncol(neighbors),dimnames = dimnames(neighbors))
+  # 获取细胞名称
+  cells <- rownames(neighbors)
+  alpha = 0.6
+
+  for (i in cells) {
+    neighbor_indices <- order(neighbors[i,], decreasing = TRUE)[1:k]
+    neighbor_indices = colnames(neighbors)[neighbor_indices]
+
+    weight = neighbors[i,neighbor_indices]
+
+    if (sum(weight[-1])!=0) {
+      weight = c(weight[1], weight[-1]*alpha/sum(weight[-1]))
+      weight[1] = 1 - alpha
+    }else{
+      weight = weight                 ##没有找到K近邻就自己
+    }
+
+    weight_matrix[i,names(weight)] = weight
+  }
+
+  atac_data = atac_data@assays$ATAC$counts
+  atac_data = t(atac_data)
+  atac_data = ifelse(as.matrix(atac_data) == 0, 0, 1)
+  atac_data = atac_data[,rownames(b_hat[-1,])]
+
+  smoothed_data = weight_matrix %*% atac_data
+
+  return(smoothed_data)
+
+}
+
+
+#' Missing Modality Imputation
+#'
+#' @param supermap_data The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.
+#' @param learned_mappings Cross-modal mappings learned by the 'supermap' function.
+#' @param atac_data ATAC modality data.
+#' @param resolution 'meta-cell' or 'single-cell'
+#'
+#' @return A matrix containing the imputed values for the missing modality.
+#' @export
+imputation = function(supermap_data,learned_mappings,atac_data,resolution){
+  b_hat = rbind(learned_mappings$estimated_intercept,learned_mappings$estimate_b)
+  if (resolution=='meta-cell') {
+    atac_data = supermap_data$atac_data
+    atac_data = atac_data[,rownames(b_hat[-1,])]
+    imputation = cbind(1,atac_data) %*% b_hat
+  }
+  if (resolution=='single-cell') {
+    smooth_atac = smooth_knn_atac(atac_data = atac_data, b_hat = b_hat)
+    smooth_atac = smooth_atac[,rownames(b_hat[-1,])]
+    imputation = cbind(1,smooth_atac) %*% b_hat
+  }
+
+  return(imputation)
+}
+
+smooth_knn_rna <- function(rna_data, k = 50) {
+
+  # obtaining neighbors
+  rna_data = FindNeighbors(object = rna_data, dims = 1:50, k.param = k)
+  neighbors = rna_data@graphs$RNA_snn
+
+  weight_matrix = matrix(0,nrow = nrow(neighbors),ncol = ncol(neighbors),dimnames = dimnames(neighbors))
+  # 获取细胞名称
+  cells <- rownames(neighbors)
+  alpha = 0.6
+
+  for (i in cells) {
+    neighbor_indices <- order(neighbors[i,], decreasing = TRUE)[1:k]
+    neighbor_indices = colnames(neighbors)[neighbor_indices]
+
+    weight = neighbors[i,neighbor_indices]
+
+    if (sum(weight[-1])!=0) {
+      weight = c(weight[1], weight[-1]*alpha/sum(weight[-1]))
+      weight[1] = 1 - alpha
+    }else{
+      weight = weight                 ##没有找到K近邻就自己
+    }
+    weight_matrix[i,names(weight)] = weight
+  }
+
+  var_gene = VariableFeatures(rna_data)
+  rna_data = rna_data@assays$RNA$data
+  rna_data = t(rna_data)
+  smoothed_data = weight_matrix %*% as.matrix(rna_data[,var_gene])
+
+  rna_data = CreateSeuratObject(counts = t(smoothed_data),assay = 'RNA')
+  rna_data = NormalizeData(object = rna_data,scale.factor = 10^6)
+  rna_data@assays$RNA$data = t(smoothed_data)
+  rna_data = FindVariableFeatures(rna_data,nfeatures = 3000)
+  rna_data = ScaleData(rna_data)
+  rna_data = RunPCA(rna_data)
+  rna_data = RunUMAP(rna_data, dims = 1:50)
+
+  return(rna_data)
+
+}
+
+
+
+#' Performing diagonal integration
+#' @export
+diagonal_integration = function(rna_data, atac_imputation, rna_label){
+
+  imputation = atac_imputation
+  new_atac = CreateSeuratObject(counts = t(imputation),assay = "ACTIVITY")
+  new_atac = NormalizeData(object = new_atac)
+  new_atac@assays$ACTIVITY$data = t(imputation)
+  new_atac = ScaleData(new_atac)
+  gene_use = colnames(imputation)
+
+  refdata = (rna_data@assays$RNA$data)[gene_use,]
+  rna_data = smooth_knn_rna(rna_data = rna_data)
+
+  transfer.anchors <- FindTransferAnchors(reference = rna_data, query = new_atac,
+                                          features = gene_use,scale = FALSE, reference.assay = "RNA", query.assay = "ACTIVITY", reduction = "cca")
+
+  imputation <- TransferData(anchorset = transfer.anchors, refdata = refdata,
+                             weight.reduction = 'pca',query = new_atac,k.weight = 50)
+  cell_label = rna_label
+  cell_label = cell_label[colnames(rna_data),]
+  predicted_label = TransferData(anchorset = transfer.anchors, refdata = cell_label,
+                                 weight.reduction = 'pca',query = new_atac,k.weight = 50)
+  predicted_label = predicted_label@meta.data['predicted.id']
+  rna_data = refdata
+  atac_data = imputation@assays$id@data[rownames(rna_data),]
+  colnames(atac_data) = paste0(colnames(atac_data),'_atac')
+
+  coembed_data <- cbind(rna_data,atac_data)
+  coembed = CreateSeuratObject(coembed_data)
+  coembed = NormalizeData(object = coembed)
+  coembed@assays$RNA$data = coembed_data
+  coembed <- ScaleData(coembed, features = gene_use, do.scale = FALSE)
+  coembed <- RunPCA(coembed, features = gene_use, verbose = FALSE)
+  coembed <- RunUMAP(coembed, dims = 1:50)
+  umap_cord = coembed@reductions$umap@cell.embeddings
+  pca_cord = coembed@reductions$pca@cell.embeddings
+  return(list(umap = umap_cord, embeddings = pca_cord, predicted_label = predicted_label))
+}
+
 

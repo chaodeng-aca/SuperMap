@@ -4,13 +4,7 @@
 \alias{diagonal_integration}
 \title{Performing diagonal integration}
 \usage{
-diagonal_integration(
-  supermap_data,
-  learned_mappings = learned_mappings,
-  rna,
-  atac,
-  rna_label
-)
+diagonal_integration(rna_data, atac_imputation, rna_label)
 }
 \description{
 Performing diagonal integration

@@ -4,14 +4,16 @@
 \alias{imputation}
 \title{Missing Modality Imputation}
 \usage{
-imputation(supermap_data, learned_mappings, atac)
+imputation(supermap_data, learned_mappings, atac_data, resolution)
 }
 \arguments{
 \item{supermap_data}{The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.}
 
-\item{learned_mappings}{Cross-modality mappings learned by the 'supermap' function.}
+\item{learned_mappings}{Cross-modal mappings learned by the 'supermap' function.}
 
-\item{atac}{ATAC modality data.}
+\item{atac_data}{ATAC modality data.}
+
+\item{resolution}{'meta-cell' or 'single-cell'}
 }
 \value{
 A matrix containing the imputed values for the missing modality.

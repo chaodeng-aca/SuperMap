@@ -16,7 +16,7 @@ metacell_construct(object, resolution, graph.name, algorithm = 1)
 \item{algorithm}{Clustering algorithm to use}
 }
 \value{
-A Seurat object
+A Seurat object with meta-cell partitioning information
 }
 \description{
 Construct Metacells

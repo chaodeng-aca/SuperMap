@@ -4,7 +4,7 @@
 \alias{batch_plot}
 \title{UMAP Visualization of Cells Grouped by Batch}
 \usage{
-batch_plot(umap, rna_cell_size)
+batch_plot(umap, rna_cell_size, title)
 }
 \description{
 UMAP Visualization of Cells Grouped by Batch

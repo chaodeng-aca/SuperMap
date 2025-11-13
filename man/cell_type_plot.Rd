@@ -4,7 +4,7 @@
 \alias{cell_type_plot}
 \title{UMAP Visualization of Cells Grouped by Modality}
 \usage{
-cell_type_plot(umap, rna_cell_size, rna_label, atac_label)
+cell_type_plot(umap, cell_label, rna_cell_size, title)
 }
 \description{
 UMAP Visualization of Cells Grouped by Modality
