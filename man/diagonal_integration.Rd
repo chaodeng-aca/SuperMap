@@ -6,6 +6,13 @@
 \usage{
 diagonal_integration(rna_data, atac_imputation, rna_label)
 }
+\arguments{
+\item{rna_data}{A Seurat object for the RNA modality.}
+
+\item{atac_imputation}{A matrix of imputed missing-modality profiles}
+
+\item{rna_label}{A dataframe providing cell-type labels}
+}
 \description{
 Performing diagonal integration
 }

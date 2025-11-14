@@ -2,7 +2,7 @@
 % Please edit documentation in R/supermap.R
 \name{supermap}
 \alias{supermap}
-\title{Main Function of SuperMAP for Learning Cross-Modality Mapping}
+\title{Main Function of SuperMAP for Learning Cross-modal Mappings}
 \usage{
 supermap(
   input_data,
@@ -15,23 +15,23 @@ supermap(
 )
 }
 \arguments{
-\item{input_data}{The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.}
+\item{input_data}{The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distance matrix.}
 
 \item{w}{A hyperparameter that balances the contribution of marginal distributions and pairwise interactions. Default is 2.}
 
 \item{rho}{A hyperparameter for the ADMM optimization algorithm. Controls the penalty of the constraint term. Default is 1.}
 
-\item{lambda_prior}{A hyperparameter that controls the confidence level in prior knowledge. Default is 1e-4.}
+\item{lambda_prior}{A hyperparameter specifying the strength of the prior knowledge regularization. Default is 1e-4.}
 
-\item{n_iter}{Number of iterations to run. Default is 10.}
+\item{n_iter}{The number of iterations to run the optimization. Default is 10.}
 
 \item{d0}{A hyperparameter defining distance scale, default is 100kb.}
 
 \item{ncore}{Number of CPU cores to use for parallel computation.}
 }
 \value{
-A list containing the estimated cross-modality mapping and convergence information.
+A list containing the estimated cross-modal mappings and convergence information from the optimization.
 }
 \description{
-Main Function of SuperMAP for Learning Cross-Modality Mapping
+This function performs the core SuperMAP optimization to learn the cross-modal mappings between modalities.
 }

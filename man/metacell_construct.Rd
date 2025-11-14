@@ -7,17 +7,17 @@
 metacell_construct(object, resolution, graph.name, algorithm = 1)
 }
 \arguments{
-\item{object}{A Seurat object}
+\item{object}{A Seurat object.}
 
-\item{resolution}{Clustering resolution parameter controlling the granularity of metacell}
+\item{resolution}{Clustering resolution parameter determining the graining level of the resulting meta-cells.}
 
-\item{graph.name}{Name of the graph to use for clustering}
+\item{graph.name}{The name of the graph to use for clustering.}
 
-\item{algorithm}{Clustering algorithm to use}
+\item{algorithm}{The clustering algorithm to apply.}
 }
 \value{
-A Seurat object with meta-cell partitioning information
+A Seurat object with meta-cell partitioning information.
 }
 \description{
-Construct Metacells
+Perform meta-cell construction by clustering cells within a Seurat object.
 }

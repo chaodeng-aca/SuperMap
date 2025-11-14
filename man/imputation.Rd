@@ -2,22 +2,22 @@
 % Please edit documentation in R/supermap.R
 \name{imputation}
 \alias{imputation}
-\title{Missing Modality Imputation}
+\title{Missing-Modality Imputation}
 \usage{
 imputation(supermap_data, learned_mappings, atac_data, resolution)
 }
 \arguments{
-\item{supermap_data}{The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.}
+\item{supermap_data}{The data used for model fitting.}
 
 \item{learned_mappings}{Cross-modal mappings learned by the 'supermap' function.}
 
-\item{atac_data}{ATAC modality data.}
+\item{atac_data}{A Seurat object for ATAC modality.}
 
-\item{resolution}{'meta-cell' or 'single-cell'}
+\item{resolution}{Either "meta-cell" or "single-cell", specifying the resolution at which to perform imputation.}
 }
 \value{
-A matrix containing the imputed values for the missing modality.
+A matrix containing the imputed profiles for the missing modality.
 }
 \description{
-Missing Modality Imputation
+Impute missing modality profiles using the learned cross-modal mappings. This function supports imputation at either the meta-cell or single-cell resolution, depending on downstream analysis needs.
 }

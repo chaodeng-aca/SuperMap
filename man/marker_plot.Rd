@@ -7,5 +7,5 @@
 marker_plot(cell_umap)
 }
 \description{
-Visualize the expression patterns of marker genes across cells.
+Visualize the expression patterns of marker genes.
 }

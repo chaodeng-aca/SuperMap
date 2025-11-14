@@ -2,20 +2,20 @@
 % Please edit documentation in R/supermap.R
 \name{metacell_matrix_RNA}
 \alias{metacell_matrix_RNA}
-\title{Compute Metacell-Level Data Matrix}
+\title{Compute Meta-cell Level Data Matrix}
 \usage{
 metacell_matrix_RNA(object, cluster.name, size_factor = 10^6)
 }
 \arguments{
-\item{object}{A Seurat object}
+\item{object}{A Seurat object.}
 
-\item{cluster.name}{The name of the cluster}
+\item{cluster.name}{The name of the clustering column in the Seurat object's metadata that defines the meta-cell partitions.}
 
-\item{size_factor}{A scaling factor used to normalize the data}
+\item{size_factor}{A scaling factor used to normalize the aggregated data.}
 }
 \value{
-A matrix representing data at the metacell level.
+A matrix representing meta-cell level data.
 }
 \description{
-Compute Metacell-Level Data Matrix
+Compute Meta-cell Level Data Matrix
 }

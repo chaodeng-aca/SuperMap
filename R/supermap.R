@@ -1,7 +1,6 @@
 #' SuperMap: Bridging Unpaired Single-Cell Multimodal Data for Integrative Analyses
 #'
-#' @docType package
-#' @name SuperMap
+#' @keywords internal
 #'
 #' @import BiocParallel
 #' @import dplyr
@@ -24,16 +23,16 @@
 #' @import foreach
 #' @import doParallel
 #' @import bigmemory
-NULL
+"_PACKAGE"
 
 
-#' Calculate Distance Between Genes and Peaks
+#' Calculate Genomic Distance Between Genes and Peaks
 #' @description Compute the genomic distances between all genes in the RNA modality and all peaks in the ATAC modality.
-#' @param rna A matrix representing the RNA modality data, where columns are features (genes) and rows are cells.
-#' @param atac A matrix representing the ATAC modality data, where columns are features (peaks) and rows are cells.
-#' @param gene_annotation A data frame containing gene location information (e.g., chromosome, start, end, strand).
+#' @param rna A matrix representing the RNA modality data, where rows correspond to cells and columns correspond to genes.
+#' @param atac A matrix representing the ATAC modality data, where rows correspond to cells and columns correspond to peaks.
+#' @param gene_annotation A data frame containing genomic annotations for genes (e.g., chromosome, start, end, strand).
 #'
-#' @return A list containing the modality data and the computed gene-peak distances. This can be used as input for downstream model fitting.
+#' @return A list containing the input modality data and the computed gene–peak distance matrix. The returned object can be used as input for subsequent model fitting.
 #' @export
 gene_peak_distance = function(rna,atac,gene_annotation){
 
@@ -165,7 +164,7 @@ cell_type_plot = function(umap, cell_label, rna_cell_size, title){
 
 
 #' Visualization of Marker Genes
-#' @description Visualize the expression patterns of marker genes across cells.
+#' @description Visualize the expression patterns of marker genes.
 #' @export
 marker_plot = function(cell_umap){
   cell_umap$imputed_value = scale_01(cell_umap$imputed_value)
@@ -365,17 +364,18 @@ marginal_nls = function(Y, X, pairwise_par, marginal_init_des, u, index_B_01_des
   }
 }
 
-#' Main Function of SuperMAP for Learning Cross-Modality Mapping
+#' Main Function of SuperMAP for Learning Cross-modal Mappings
+#' @description This function performs the core SuperMAP optimization to learn the cross-modal mappings between modalities.
 #'
-#' @param input_data The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.
+#' @param input_data The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distance matrix.
 #' @param w A hyperparameter that balances the contribution of marginal distributions and pairwise interactions. Default is 2.
 #' @param rho A hyperparameter for the ADMM optimization algorithm. Controls the penalty of the constraint term. Default is 1.
-#' @param lambda_prior A hyperparameter that controls the confidence level in prior knowledge. Default is 1e-4.
-#' @param n_iter Number of iterations to run. Default is 10.
+#' @param lambda_prior A hyperparameter specifying the strength of the prior knowledge regularization. Default is 1e-4.
+#' @param n_iter The number of iterations to run the optimization. Default is 10.
 #' @param d0 A hyperparameter defining distance scale, default is 100kb.
 #' @param ncore Number of CPU cores to use for parallel computation.
 #'
-#' @return A list containing the estimated cross-modality mapping and convergence information.
+#' @return A list containing the estimated cross-modal mappings and convergence information from the optimization.
 #' @export
 supermap = function(input_data, w=2, rho=1, lambda_prior=1*10^(-4), n_iter=10,d0=100000,ncore=60){
 
@@ -457,13 +457,13 @@ supermap = function(input_data, w=2, rho=1, lambda_prior=1*10^(-4), n_iter=10,d0
 
 
 #' Construct Metacells
+#' @description Perform meta-cell construction by clustering cells within a Seurat object.
+#' @param object A Seurat object.
+#' @param resolution Clustering resolution parameter determining the graining level of the resulting meta-cells.
+#' @param graph.name The name of the graph to use for clustering.
+#' @param algorithm The clustering algorithm to apply.
 #'
-#' @param object A Seurat object
-#' @param resolution Clustering resolution parameter controlling the granularity of metacell
-#' @param graph.name Name of the graph to use for clustering
-#' @param algorithm Clustering algorithm to use
-#'
-#' @return A Seurat object with meta-cell partitioning information
+#' @return A Seurat object with meta-cell partitioning information.
 #' @export
 metacell_construct <- function(object, resolution, graph.name, algorithm =1){
   object <- FindClusters(object, graph.name = graph.name,resolution = resolution, algorithm = algorithm)
@@ -479,13 +479,13 @@ metacell_construct <- function(object, resolution, graph.name, algorithm =1){
   return(object)
 }
 
-#' Compute Metacell-Level Data Matrix
+#' Compute Meta-cell Level Data Matrix
 #'
-#' @param object A Seurat object
-#' @param cluster.name The name of the cluster
-#' @param size_factor A scaling factor used to normalize the data
+#' @param object A Seurat object.
+#' @param cluster.name The name of the clustering column in the Seurat object's metadata that defines the meta-cell partitions.
+#' @param size_factor A scaling factor used to normalize the aggregated data.
 #'
-#' @return A matrix representing data at the metacell level.
+#' @return A matrix representing meta-cell level data.
 #' @export
 metacell_matrix_RNA <- function(object, cluster.name, size_factor=10^6) {
   clusters <- object@meta.data[[cluster.name]]
@@ -503,12 +503,12 @@ metacell_matrix_RNA <- function(object, cluster.name, size_factor=10^6) {
   return(metacell)
 }
 
-#' Compute Metacell-Level Data Matrix
+#' Compute Meta-cell Level Data Matrix
 #'
-#' @param object A Seurat object
-#' @param cluster.name The name of the cluster
+#' @param object A Seurat object.
+#' @param cluster.name The name of the clustering column in the Seurat object's metadata that defines the meta-cell partitions.
 #'
-#' @return A matrix representing data at the metacell level.
+#' @return A matrix representing meta-cell level data.
 #' @export
 metacell_matrix_ATAC <- function(object, cluster.name) {
   clusters <- object@meta.data[[cluster.name]]
@@ -527,12 +527,12 @@ metacell_matrix_ATAC <- function(object, cluster.name) {
   return(metacell)
 }
 
-#' Compute Metacell-Level Data Matrix
+#' Compute Meta-cell Level Data Matrix
 #'
-#' @param object A Seurat object
-#' @param cluster.name The name of the cluster
+#' @param object A Seurat object.
+#' @param cluster.name The name of the clustering column in the Seurat object's metadata that defines the meta-cell partitions.
 #'
-#' @return A matrix representing data at the metacell level.
+#' @return A matrix representing meta-cell level data.
 #' @export
 metacell_matrix_ADT <- function(object, cluster.name) {
   clusters <- object@meta.data[[cluster.name]]
@@ -591,14 +591,14 @@ smooth_knn_atac <- function(atac_data, b_hat, k = 50) {
 }
 
 
-#' Missing Modality Imputation
-#'
-#' @param supermap_data The output from the 'gene_peak_distance' function, including both the modality data and the computed gene-peak distances.
+#' Missing-Modality Imputation
+#' @description  Impute missing modality profiles using the learned cross-modal mappings. This function supports imputation at either the meta-cell or single-cell resolution, depending on downstream analysis needs.
+#' @param supermap_data The data used for model fitting.
 #' @param learned_mappings Cross-modal mappings learned by the 'supermap' function.
-#' @param atac_data ATAC modality data.
-#' @param resolution 'meta-cell' or 'single-cell'
+#' @param atac_data A Seurat object for ATAC modality.
+#' @param resolution Either "meta-cell" or "single-cell", specifying the resolution at which to perform imputation.
 #'
-#' @return A matrix containing the imputed values for the missing modality.
+#' @return A matrix containing the imputed profiles for the missing modality.
 #' @export
 imputation = function(supermap_data,learned_mappings,atac_data,resolution){
   b_hat = rbind(learned_mappings$estimated_intercept,learned_mappings$estimate_b)
@@ -662,6 +662,9 @@ smooth_knn_rna <- function(rna_data, k = 50) {
 
 
 #' Performing diagonal integration
+#' @param rna_data A Seurat object for the RNA modality.
+#' @param atac_imputation A matrix of imputed missing-modality profiles
+#' @param rna_label A dataframe providing cell-type labels
 #' @export
 diagonal_integration = function(rna_data, atac_imputation, rna_label){
 

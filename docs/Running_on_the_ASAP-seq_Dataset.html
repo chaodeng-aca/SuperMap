@@ -402,20 +402,20 @@ this workflow, please refer to their official <a href="https://satijalab.org/seu
 <pre><code>## Centering and scaling data matrix</code></pre>
 <pre class="r"><code>adt_seurat = RunPCA(adt_seurat,features = rownames(adt_seurat),verbose = FALSE)
 adt_seurat = RunUMAP(adt_seurat,dims = 1:50)</code></pre>
-<pre><code>## 00:12:24 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
-<pre><code>## 00:12:24 Read 4502 rows and found 50 numeric columns</code></pre>
-<pre><code>## 00:12:24 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
-<pre><code>## 00:12:24 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
+<pre><code>## 21:55:06 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
+<pre><code>## 21:55:06 Read 4502 rows and found 50 numeric columns</code></pre>
+<pre><code>## 21:55:06 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
+<pre><code>## 21:55:06 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
 <pre><code>## 0%   10   20   30   40   50   60   70   80   90   100%</code></pre>
 <pre><code>## [----|----|----|----|----|----|----|----|----|----|</code></pre>
 <pre><code>## **************************************************|
-## 00:12:24 Writing NN index file to temp file /tmp/Rtmpi4EzUM/file1d52927458afa8
-## 00:12:24 Searching Annoy index using 1 thread, search_k = 3000
-## 00:12:25 Annoy recall = 100%
-## 00:12:26 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-## 00:12:27 Initializing from normalized Laplacian + noise (using RSpectra)
-## 00:12:27 Commencing optimization for 500 epochs, with 201666 positive edges
-## 00:12:33 Optimization finished</code></pre>
+## 21:55:07 Writing NN index file to temp file /tmp/RtmpD1GihH/file3be9a2251efacc
+## 21:55:07 Searching Annoy index using 1 thread, search_k = 3000
+## 21:55:08 Annoy recall = 100%
+## 21:55:09 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+## 21:55:11 Initializing from normalized Laplacian + noise (using RSpectra)
+## 21:55:11 Commencing optimization for 500 epochs, with 201666 positive edges
+## 21:55:17 Optimization finished</code></pre>
 <pre class="r"><code>adt_seurat = FindNeighbors(object = adt_seurat, reduction = &#39;pca&#39;, dims = 1:50)</code></pre>
 <pre><code>## Computing nearest neighbor graph
 ## Computing SNN</code></pre>
@@ -426,20 +426,20 @@ atac_seurat &lt;- RunSVD(atac_seurat)</code></pre>
 <pre><code>## Running SVD
 ## Scaling cell embeddings</code></pre>
 <pre class="r"><code>atac_seurat &lt;- RunUMAP(atac_seurat, reduction = &#39;lsi&#39;, dims = 2:50)</code></pre>
-<pre><code>## 00:13:01 UMAP embedding parameters a = 0.9922 b = 1.112
-## 00:13:01 Read 4502 rows and found 49 numeric columns
-## 00:13:01 Using Annoy for neighbor search, n_neighbors = 30
-## 00:13:01 Building Annoy index with metric = cosine, n_trees = 50
+<pre><code>## 21:55:45 UMAP embedding parameters a = 0.9922 b = 1.112
+## 21:55:45 Read 4502 rows and found 49 numeric columns
+## 21:55:45 Using Annoy for neighbor search, n_neighbors = 30
+## 21:55:45 Building Annoy index with metric = cosine, n_trees = 50
 ## 0%   10   20   30   40   50   60   70   80   90   100%
 ## [----|----|----|----|----|----|----|----|----|----|
 ## **************************************************|
-## 00:13:01 Writing NN index file to temp file /tmp/Rtmpi4EzUM/file1d52927052693a
-## 00:13:01 Searching Annoy index using 1 thread, search_k = 3000
-## 00:13:02 Annoy recall = 100%
-## 00:13:03 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-## 00:13:04 Initializing from normalized Laplacian + noise (using RSpectra)
-## 00:13:05 Commencing optimization for 500 epochs, with 184230 positive edges
-## 00:13:10 Optimization finished</code></pre>
+## 21:55:46 Writing NN index file to temp file /tmp/RtmpD1GihH/file3be9a23bbeb8f7
+## 21:55:46 Searching Annoy index using 1 thread, search_k = 3000
+## 21:55:47 Annoy recall = 100%
+## 21:55:48 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+## 21:55:50 Initializing from normalized Laplacian + noise (using RSpectra)
+## 21:55:50 Commencing optimization for 500 epochs, with 184230 positive edges
+## 21:55:55 Optimization finished</code></pre>
 <pre class="r"><code>atac_seurat &lt;- FindNeighbors(object = atac_seurat, reduction = &#39;lsi&#39;, dims = 2:50)</code></pre>
 <pre><code>## Computing nearest neighbor graph
 ## Computing SNN</code></pre>
@@ -451,8 +451,8 @@ DimPlot(atac_seurat,reduction = &#39;umap&#39;,label = TRUE,group.by = &#39;cell
 for each modality—which are ready for the subsequent computational
 analyses.</p>
 </div>
-<div id="stage-2-meta-cell-construction" class="section level2">
-<h2>Stage 2: Meta-cell construction</h2>
+<div id="stage-2-meta-cell-partitioning" class="section level2">
+<h2>Stage 2: Meta-cell partitioning</h2>
 <p>In practice, single-cell data are highly sparse and noisy, with an
 inherently low signal-to-noise ratio. This poses challenges for both
 model fitting and imputation, making it difficult for the model to
@@ -461,9 +461,7 @@ meta-cell partitioning strategy, a widely used approach to enhance the
 signal-to-noise ratio in single-cell data by aggregating closely similar
 cells into meta-cells. For more details, please refer to our paper.
 Next, we demonstrate how to construct the meta-cell data.</p>
-<pre class="r"><code>## The resolution parameter can be adjusted flexibly, as it determines the graining level of the resulting meta-cells. Meta-cell graining levels within a reasonable range (25–105) are generally feasible. For more details, please refer to our paper.
-
-adt_seurat = metacell_construct(object = adt_seurat, resolution = 15, graph.name = &#39;ADT_snn&#39;)</code></pre>
+<pre class="r"><code>adt_seurat = metacell_construct(object = adt_seurat, resolution = 15, graph.name = &#39;ADT_snn&#39;)</code></pre>
 <pre><code>## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 ## 
 ## Number of nodes: 4502
@@ -485,12 +483,18 @@ adt_seurat = metacell_construct(object = adt_seurat, resolution = 15, graph.name
 ## Number of communities: 100
 ## Elapsed time: 0 seconds</code></pre>
 <pre><code>## 4 singletons identified. 96 final clusters.</code></pre>
+<p>The resolution parameter in <em>metacell_construct</em> function can
+be adjusted flexibly, as it determines the graining level of the
+resulting meta-cells. Meta-cell graining levels within a reasonable
+range (25–105) are generally feasible. For more details, please refer to
+our paper.</p>
 <pre class="r"><code>metacell_adt &lt;- metacell_matrix_ADT(object = adt_seurat,cluster.name = &quot;seurat_clusters&quot;)
 metacell_atac &lt;- metacell_matrix_ATAC(object = atac_seurat,cluster.name = &quot;seurat_clusters&quot;)</code></pre>
-<p>At this point, we obtained metacell-level data for model fitting.</p>
+<p>At this point, we obtained meta-cell data for model fitting to
+estimate cross-modal mappings.</p>
 </div>
-<div id="stage-3-computing-peak-gene-distance" class="section level2">
-<h2>Stage 3: Computing peak-gene distance</h2>
+<div id="stage-3-computing-peak-protein-genomic-distance" class="section level2">
+<h2>Stage 3: Computing peak-protein genomic distance</h2>
 <p>SuperMap incorporates genomic proximity as prior knowledge to
 regularize the model. Therefore, we need to compute the genomic
 distances between protein-coding genes in the ADT modality and peaks in
@@ -505,8 +509,15 @@ metacell_adt = metacell_adt[,rna_protein_conversion$V2]
 colnames(metacell_adt) = rna_protein_conversion$V1
 
 gene_annotation = read.table(&#39;~/pbmc_pair_cpm/GRCh38_cellranger2020.gene_location.txt&#39;,sep = &#39; &#39;,header = TRUE)   ## Read the genomic coordinates of all genes.
-
-supermap_data = gene_peak_distance(rna = metacell_adt, atac = metacell_atac,gene_annotation = gene_annotation)</code></pre>
+head(gene_annotation)</code></pre>
+<pre><code>##    Chr  start    end           ensID   gene_name strand
+## 1 chr1  29554  31109 ENSG00000243485 MIR1302-2HG      +
+## 2 chr1  34554  36081 ENSG00000237613     FAM138A      -
+## 3 chr1  65419  71585 ENSG00000186092       OR4F5      +
+## 4 chr1  89295 133723 ENSG00000238009  AL627309.1      -
+## 5 chr1  89551  91105 ENSG00000239945  AL627309.3      -
+## 6 chr1 139790 140339 ENSG00000239906  AL627309.2      -</code></pre>
+<pre class="r"><code>supermap_data = gene_peak_distance(rna = metacell_adt, atac = metacell_atac,gene_annotation = gene_annotation)</code></pre>
 </div>
 <div id="stage-4-model-fitting-for-estimating-cross-modal-mappings" class="section level2">
 <h2>Stage 4: Model fitting for estimating cross-modal mappings</h2>
@@ -527,14 +538,14 @@ plot(loss$objective)</code></pre>
 <p>We observed that the objective function steadily converged over
 iterations.</p>
 </div>
-<div id="stage-4-imputating-missing-modality" class="section level2">
-<h2>Stage 4: Imputating missing modality</h2>
+<div id="stage-4-imputating-missing-modality-profiles" class="section level2">
+<h2>Stage 4: Imputating missing-modality profiles</h2>
 <p>After estimating B, we proceed to impute the missing (unmeasured)
 modality profiles in unpaired data for subsequent analyses. For
 imputation, SuperMap provides options at both meta-cell and single-cell
-resolution to accommodate different downstream analysis tasks. Below, we
-demonstrate how to predict protein abundance from chromatin
-accessibility.</p>
+resolution to accommodate different downstream analysis tasks (see our
+paper for details). Below, we demonstrate how to predict protein
+abundance from chromatin accessibility.</p>
 <pre class="r"><code>## Meta-cell imputation
 imputation_metacell = imputation(supermap_data = supermap_data, learned_mappings = learned_mappings, atac_data = atac_seurat, resolution = &#39;meta-cell&#39;)
 
@@ -544,10 +555,9 @@ imputation_singlecell = imputation(supermap_data = supermap_data, learned_mappin
 <pre><code>## Computing SNN</code></pre>
 <p>The imputed profiles enable a wide range of downstream analyses of
 unpaired data, including cell annotation, diagonal integration,
-regulatory inference, and trajectory analysis, thereby providing
-valuable biological insights. Next, we visualize the imputed expression
-patterns of several representative marker genes to facilitate cell
-annotation.</p>
+regulatory inference, and trajectory analysis. Next, we visualize the
+imputed expression patterns of several representative marker genes to
+facilitate cell annotation.</p>
 <pre class="r"><code>cell_umap = atac_seurat@reductions$umap@cell.embeddings
 cell_umap = as.data.frame(cell_umap)
 
